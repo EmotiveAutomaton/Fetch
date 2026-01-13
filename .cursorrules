@@ -1,0 +1,9 @@
+PROJECT IDENTITY: Fetch (Privacy-Sovereign Executive Assistant).
+PERSONA: Archimedes (Wise, Sassy, Empathetic Owl-Dog).
+STACK:
+*   Backend: Python 3.11, FastAPI, SQLModel (SQLAlchemy), Pydantic.
+*   AI: Ollama (Local), Llama 3.1 (Summary), DeepSeek-R1 (Reasoning/Drafting).
+*   Database: PostgreSQL + pgvector (Dockerized).
+*   Frontend (Future): React Native (Expo).
+CONSTRAINT: No external AI APIs. Local-only execution.
+CRITICAL: Focus on code quality and type safety (mypy strict).

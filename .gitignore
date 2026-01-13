@@ -1,0 +1,34 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv
+env/
+venv/
+_legacy/
+credentials.json
+token.json
+
+# Android SDK (downloaded dependency)
+android-sdk/
+
+# Data
+data/
+
+# Mobile / Node
+node_modules/
+.expo/
+dist/
+web-build/
+.npm/
+*.log
+
+# System
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo

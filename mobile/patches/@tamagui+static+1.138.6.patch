@@ -1,0 +1,89 @@
+diff --git a/node_modules/@tamagui/static/dist/extractor/createExtractor.cjs b/node_modules/@tamagui/static/dist/extractor/createExtractor.cjs
+index de15b81..bc2718c 100644
+--- a/node_modules/@tamagui/static/dist/extractor/createExtractor.cjs
++++ b/node_modules/@tamagui/static/dist/extractor/createExtractor.cjs
+@@ -34,14 +34,14 @@ __export(createExtractor_exports, {
+   createExtractor: () => createExtractor
+ });
+ module.exports = __toCommonJS(createExtractor_exports);
+-var import_traverse = __toESM(require("@babel/traverse")),
++  import_requireTamaguiCore = require("../helpers/requireTamaguiCore.cjs"),
++  import_traverse = __toESM(require("@babel/traverse")),
+   t = __toESM(require("@babel/types")),
+   import_cli_color = require("@tamagui/cli-color"),
+   reactNativeWebInternals = __toESM(require("@tamagui/react-native-web-internals")),
+   import_web = require("@tamagui/web"),
+   import_node_path = require("node:path"),
+   import_constants = require("../constants.cjs"),
+-  import_requireTamaguiCore = require("../helpers/requireTamaguiCore.cjs"),
+   import_createEvaluator = require("./createEvaluator.cjs"),
+   import_evaluateAstNode = require("./evaluateAstNode.cjs"),
+   import_extractHelpers = require("./extractHelpers.cjs"),
+diff --git a/node_modules/@tamagui/static/dist/helpers/requireTamaguiCore.cjs b/node_modules/@tamagui/static/dist/helpers/requireTamaguiCore.cjs
+index 70b5238..0f09085 100644
+--- a/node_modules/@tamagui/static/dist/helpers/requireTamaguiCore.cjs
++++ b/node_modules/@tamagui/static/dist/helpers/requireTamaguiCore.cjs
+@@ -25,6 +25,30 @@ __export(requireTamaguiCore_exports, {
+ module.exports = __toCommonJS(requireTamaguiCore_exports);
+ function requireTamaguiCore(platform, ogRequire = require) {
+   if (!platform) throw new Error("No platform given to requireTamaguiCore");
++  
++  // [PATCH] Manual Module._resolveFilename Patch
++  try {
++    const Module = ogRequire('module');
++    const path = ogRequire('path');
++    if (Module && Module._resolveFilename) {
++        const originalResolveFilename = Module._resolveFilename;
++        Module._resolveFilename = function (request, parent, isMain) {
++            if (request === 'react-native') {
++                request = 'react-native-web';
++            } else if (request === 'react-native/Libraries/Pressability/Pressability') {
++                 // Redirect deep import to mock
++                 request = path.resolve(process.cwd(), 'mocks/Pressability.js');
++            } else if (request === 'react-native/Libraries/Pressability/usePressability') {
++                 request = path.resolve(process.cwd(), 'mocks/Pressability.js');
++            }
++            return originalResolveFilename.call(this, request, parent, isMain);
++        };
++    }
++  } catch (e) {
++    console.warn('[TAMAGUI-PATCH] FAILED to apply manual patch:', e.message);
++  }
++  // [END PATCH]
++
+   const og1 = process.env.TAMAGUI_IS_SERVER,
+     og2 = process.env.TAMAGUI_KEEP_THEMES;
+   process.env.TAMAGUI_IS_SERVER ||= "1", process.env.TAMAGUI_KEEP_THEMES ||= "1";
+diff --git a/node_modules/@tamagui/static/dist/registerRequire.cjs b/node_modules/@tamagui/static/dist/registerRequire.cjs
+index 7e27d5f..9db04d7 100644
+--- a/node_modules/@tamagui/static/dist/registerRequire.cjs
++++ b/node_modules/@tamagui/static/dist/registerRequire.cjs
+@@ -58,16 +58,22 @@ function registerRequire(platform, {
+   og || (og = Module.prototype.require), isRegistered = !0, Module.prototype.require = tamaguiRequire;
+   function tamaguiRequire(path) {
+     if (path === "tamagui" && platform === "native") return og.apply(this, ["tamagui/native"]);
+-    if (path === "@tamagui/core") return (0, import_requireTamaguiCore.requireTamaguiCore)(platform, path2 => og.apply(this, [path2]));
+-    if (path in knownIgnorableModules || path.startsWith("react-native-reanimated") || import_bundle.esbuildIgnoreFilesRegex.test(path)) return proxyWorm;
+     if (path in compiled) return compiled[path];
+     if (path === "react-native-svg") return og.apply(this, ["@tamagui/react-native-svg"]);
+     if (path === "react-native/package.json") return og.apply(this, ["react-native-web/package.json"]);
+-    if (path === "@tamagui/react-native-web-lite" || path === "react-native" || path.startsWith("react-native/")) try {
+-      return og.apply("react-native");
+-    } catch {
+-      return og.apply(this, ["@tamagui/react-native-web-lite"]);
++    
++    // [DEBUG] Log attempts to load react-native
++    if (path === "@tamagui/react-native-web-lite" || path === "react-native" || path.startsWith("react-native/")) {
++        try {
++            // [FIX] Use correct arguments for apply
++            return og.apply(this, ["react-native"]);
++        } catch (err) {
++            console.error('[TAMAGUI-DEBUG] Failed to load react-native (native):', err.message);
++            console.error(err.stack);
++            return og.apply(this, ["@tamagui/react-native-web-lite"]);
++        }
+     }
++
+     if (!whitelisted[path] && proxyWormImports && !path.includes(".tamagui-dynamic-eval")) return path === "tamagui" ? og.apply(this, [path]) : proxyWorm;
+     try {
+       return og.apply(this, arguments);

@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+sqlmodel
+asyncpg
+psycopg2-binary
+pgvector
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+google-api-python-client
+sentence-transformers
+ollama

@@ -1,0 +1,27 @@
+[
+  {
+    "subject": "Inquiry about therapy sessions",
+    "body": "Hi, I'm looking for a therapist who specializes in anxiety. Do you have any openings?",
+    "response": "Hello, thank you for reaching out. I do specialize in anxiety disorders and would be happy to discuss how I can support you. I currently have openings on Tuesday and Thursday afternoons. Would you like to schedule a brief 15-minute consultation call to see if we're a good fit? Best regards, [Name]"
+  },
+  {
+    "subject": "Rescheduling appointment",
+    "body": "Something came up and I can't make it tomorrow at 2pm. Can we move it to next week?",
+    "response": "Hi, thanks for letting me know. I understand things come up. I have availability next Wednesday at 2pm or Thursday at 10am. Do either of those work for you? Please let me know what you prefer. Best, [Name]"
+  },
+  {
+    "subject": "Insurance question",
+    "body": "Do you take Blue Cross Blue Shield?",
+    "response": "Hello, I am an out-of-network provider, which means I do not bill insurance directly. However, I can provide you with a monthly superbill that you can submit to your insurance company for potential reimbursement. I recommend calling the number on the back of your card to check your out-of-network mental health benefits. Let me know if you have any other questions. Warmly, [Name]"
+  },
+  {
+    "subject": "New Client Paperwork",
+    "body": "I've filled out the forms you sent. What's the next step?",
+    "response": "Hi, thank you for completing the paperwork so promptly! I've received everything I need. Our first session is confirmed for this Friday at 10am. You'll receive a link to the secure video portal about 24 hours before our appointment. I look forward to meeting you soon. Best, [Name]"
+  },
+  {
+    "subject": "Feeling overwhelmed",
+    "body": "I'm having a really hard time this week and don't know if I can wait until our next session.",
+    "response": "I'm so sorry to hear you're going through a tough time right now. If you feel you are in immediate crisis, please contact the crisis line at 988 or go to your nearest emergency room. If you are safe but need support sooner, I have a cancellation tomorrow at 11am. Would you like to take that spot? Please take care. Warmly, [Name]"
+  }
+]
